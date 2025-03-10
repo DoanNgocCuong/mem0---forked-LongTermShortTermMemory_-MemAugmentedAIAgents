@@ -6,6 +6,6 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE 25046
 
-CMD ["python", "server.py"]
+CMD ["sh", "-c", "sed -i 's/port=8000/port=25046/g' server.py && python server.py"]

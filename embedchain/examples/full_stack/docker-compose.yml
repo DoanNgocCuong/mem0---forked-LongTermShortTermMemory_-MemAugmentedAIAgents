@@ -1,24 +1,32 @@
-version: "3.9"
+version: '3.8'
 
 services:
   backend:
-    container_name: embedchain-backend
-    restart: unless-stopped
     build:
-      context: backend
+      context: ./backend
       dockerfile: Dockerfile
-    image: embedchain/backend
+    container_name: embedchain-backend
+    volumes:
+      - ./backend:/usr/src/app/backend
+      - backend_data:/usr/src/app/backend/database
     ports:
-      - "8000:8000"
+      - "25046:25046"
+    environment:
+      - PYTHONUNBUFFERED=1
 
   frontend:
-    container_name: embedchain-frontend
-    restart: unless-stopped
     build:
-      context: frontend
+      context: ./frontend
       dockerfile: Dockerfile
-    image: embedchain/frontend
+    container_name: embedchain-frontend
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+      - /usr/src/app/frontend/node_modules
+      - /usr/src/app/frontend/.next
     ports:
-      - "3000:3000"
+      - "25047:25047"
     depends_on:
-      - "backend"
+      - backend
+
+volumes:
+  backend_data:
